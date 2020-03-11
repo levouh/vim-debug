@@ -18,21 +18,90 @@ _I have only tested this plugin with the following:_
 Plug 'levouh/vim-debug'
 ```
 
-### Setup
+### Defaults
+
+#### Commands
 
 `vim-debug` provides the following commands:
 
 | **Command** | **Description** |
 |---|---|
 | `:DebugPrint` | Format and put the string based on `g:DebugPrefix` and the passed argument. |
+| `:DebugCounterReset` | Resets the value of `g:debug_counter` to 0. |
 
-No mappings are provided by default, but some example mappings might include:
+#### Mappings
+
+No mappings are provided by default, see the _Setup_ section for some recommendations.
+
+#### Filetypes
+
+`FileType` autocommands are how you can add print statements, that needs to be formattable with Vim's `printf` function.
+
+Rules:
+- The pattern should contain two printf-formattable string markers.
+
+The following are provided by default:
 
 ```
-TODO
+augroup debug
+    au!
+
+    au FileType awk     let b:debug_print_pattern = 'printf "%s\n", %s'
+    au FileType c       let b:debug_print_pattern = 'printf("%s: %%d\n", %s);'
+    au FileType python  let b:debug_print_pattern = 'print("%s", %s)'
+    au FileType sh      let b:debug_print_pattern = 'printf ''%s\n'' %s'
+    au FileType vim     let b:debug_print_pattern = 'echom printf("%s", %s)'
+augroup END
 ```
 
-### Configuration
+#### Variables
+
+For debugging breadcrumbs, the global `g:debug_counter` is provided, increment is as you see fit. This can be reset
+with the `DebugCounterReset` command, or by your own means.
+
+### Setup
+
+Here is the setup that I use:
+
+```
+function! DebugIncrement()
+    let g:debug_counter = g:debug_counter + 1
+
+    return g:debug_counter
+endfunction
+
+function GetVisualSelection()
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+
+    if len(lines) == 0
+        return ''
+    endif
+
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+
+    return join(lines, "\n")
+endfunction
+
+" Current visual selection
+xnoremap <silent> <Leader>dv :<C-U>DebugPrint GetVisualSelection()<CR>
+
+" Current word
+nnoremap <silent> <Leader>dw :<C-U>DebugPrint expand('<cword>')<CR>
+
+" Based on user input
+nnoremap <silent> <Leader>dS :<C-U>DebugPrint input('Debug expression: ')<CR>
+
+" Incremented number
+nnoremap <silent> <Leader>di :<C-U>DebugPrint DebugIncrement()<CR>
+
+" Reset incremented number
+nnoremap <silent> <Leader>dr :<C-U>DebugCounterReset<CR>
+```
+
+### Additional Configuration
 
 You can change the prefix string used by defining `g:DebugPrefix`, the default implementation is:
 

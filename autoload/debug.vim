@@ -18,7 +18,7 @@
 " --- Public Functions
 
     function! debug#print(prefix, value)
-        if !exists('b:printf_pattern)
+        if !exists('b:debug_print_pattern')
             echoerr 'No print pattern found for filetype: ' . &filetype
             return
         endif
@@ -31,7 +31,7 @@
             let l:append_at_same_line = 1
         endif
 
-        put printf(b:debug_print_pattern, a:prefix . ' ' . a:value, a:value)
+        put=printf(b:debug_print_pattern, a:prefix . ' ' . a:value, a:value)
 
         " Correct indentation level
         if indent(line('.') - 1) !=# 0
@@ -52,4 +52,3 @@
 
         call setpos('.', l:new_pos)
     endfunction
-
