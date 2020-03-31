@@ -17,12 +17,7 @@
 
 " --- Public Functions
 
-    function! debug#print(prefix, value)
-        if !exists('b:debug_print_pattern')
-            echoerr 'No print pattern found for filetype: ' . &filetype
-            return
-        endif
-
+    function! debug#print(prefix, value, bang)
         let l:prev_pos = getpos('.')
         let l:append_at_same_line = 0
 
@@ -31,7 +26,21 @@
             let l:append_at_same_line = 1
         endif
 
-        put=printf(b:debug_print_pattern, a:prefix . ' ' . a:value, a:value)
+        if a:bang
+            if exists('b:debug_print_pattern')
+                put=printf(b:debug_print_pattern, a:prefix . ' ' . a:value)
+            else
+                echoerr 'No b:debug_print_pattern for filetype ' . &filetype
+                return
+            endif
+        else
+            if exists('b:debug_value_pattern')
+                put=printf(b:debug_value_pattern, a:prefix . ' ' . a:value, a:value)
+            else
+                echoerr 'No b:debug_value_pattern for filetype ' . &filetype
+                return
+            endif
+        endif
 
         " Correct indentation level
         if indent(line('.') - 1) !=# 0
