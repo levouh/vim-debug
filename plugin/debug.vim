@@ -1,4 +1,4 @@
-" --- Verification
+" Verification {{{1
 
     if exists('g:_loaded_debug') || v:version < 802
         finish
@@ -6,7 +6,7 @@
 
     let g:_loaded_debug = 1
 
-" --- Autocommands
+" Autocommands {{{1
 
     augroup debug
         au!
@@ -27,13 +27,13 @@
         au FileType vim     let b:debug_value_pattern = 'echom printf("%s", %s)'
     augroup END
 
-" --- Variables
+" Variables {{{1
 
     " Breadcrumb debug printing
     let g:debug_counter = 0
 
-" --- Commands
+" Commands {{{1
 
-    command -bang -nargs=1 DebugPrint call debug#print(g:DebugPrefix(), <args>, <bang>0)
+    command -bang -nargs=1 DebugPrint call debug#print(debug#prefix(), <args>, <bang>0)
     command DebugCounterReset let g:debug_counter = 0
 

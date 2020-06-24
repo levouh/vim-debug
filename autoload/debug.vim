@@ -1,6 +1,6 @@
-" --- Global Functions
+" Public Functions {{{1
 
-    function! g:DebugPrefix()
+    fu! debug#prefix() " {{{2
         let l:debug_str = '[' . fnamemodify(bufname('%'), ':t') . ':'
 
         " Empty line
@@ -13,11 +13,9 @@
         let l:debug_str .= '] DBGSTR ==> '
 
         return l:debug_str
-    endfunction
+    endfu
 
-" --- Public Functions
-
-    function! debug#print(prefix, value, bang)
+    fu! debug#print(prefix, value, bang) " {{{2
         let l:prev_pos = getpos('.')
         let l:append_at_same_line = 0
 
@@ -60,4 +58,4 @@
         endif
 
         call setpos('.', l:new_pos)
-    endfunction
+    endfu
