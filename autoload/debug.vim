@@ -10,7 +10,7 @@
             let l:debug_str .= string(str2nr(line('.')) + 1)
         endif
 
-        let l:debug_str .= '] DBGSTR ==> '
+        let l:debug_str .= '] DBGSTR ==>'
 
         return l:debug_str
     endfu
