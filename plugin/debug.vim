@@ -12,7 +12,7 @@
         au!
 
         au FileType awk     let b:debug_print_pattern = 'printf "%s\n"'
-        au FileType awk     let b:debug_value_pattern = 'printf "%s\n", %s'
+        au FileType awk     let b:debug_value_pattern = 'printf "%s %%s\n", %s'
 
         au FileType c       let b:debug_print_pattern = 'printf("%s\n");'
         au FileType c       let b:debug_value_pattern = 'printf("%s: %%s\n", %s);'
@@ -20,11 +20,11 @@
         au FileType python  let b:debug_print_pattern = 'print("%s")'
         au FileType python  let b:debug_value_pattern = 'print("%s", %s)'
 
-        au FileType sh      let b:debug_print_pattern = 'printf ''%s\n'' %s'
-        au FileType sh      let b:debug_value_pattern = 'printf ''%s\n'''
+        au FileType sh      let b:debug_print_pattern = 'printf ''%s\n'''
+        au FileType sh      let b:debug_value_pattern = 'printf ''%s: %%s\n'' %s'
 
         au FileType vim     let b:debug_print_pattern = 'echom printf("%s")'
-        au FileType vim     let b:debug_value_pattern = 'echom printf("%s", %s)'
+        au FileType vim     let b:debug_value_pattern = 'echom printf("%s: %%s", %s)'
     augroup END
 
 " Variables {{{1
